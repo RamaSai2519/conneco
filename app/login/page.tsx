@@ -60,11 +60,8 @@ export default function LoginPage() {
               </div>
             </div>
             <h1 className="text-3xl font-bold text-rose-800 mb-2 -rotate-1">
-              {/* Connecō */}Hey Riya!
+              Hey Chinnu!
             </h1>
-            {/* <p className="text-rose-500 text-sm">
-              By Rama Sathya Sai
-            </p> */}
           </CardHeader>
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">

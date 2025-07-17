@@ -30,7 +30,11 @@ export default function MemoryCard({ post, index }: MemoryCardProps) {
                                 {post.caption}
                             </p>
                             <p className="text-rose-500 text-sm">
-                                {new Date(post.date).toLocaleDateString()}
+                                {new Date(post.date).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric'
+                                })}
                             </p>
                         </div>
                     </div>
@@ -46,7 +50,11 @@ export default function MemoryCard({ post, index }: MemoryCardProps) {
                                 - {post.user_name}
                             </p>
                             <p className="text-rose-500 text-sm">
-                                {new Date(post.date).toLocaleDateString()}
+                                {new Date(post.date).toLocaleDateString('en-GB', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric'
+                                })}
                             </p>
                         </div>
                     </div>

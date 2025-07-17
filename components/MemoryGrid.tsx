@@ -1,25 +1,51 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Plus } from "lucide-react"
 import { Post } from "@/types"
+import { useState } from "react"
 import MemoryCard from "./MemoryCard"
 import AddMemoryForm from "./AddMemoryForm"
+import { Button } from "@/components/ui/button"
+import { SortAsc, SortDesc } from "lucide-react"
 
 interface MemoryGridProps {
     memories: Post[]
     loading: boolean
     onRefresh?: () => void
+    onSortChange?: (sortOrder: 'newest' | 'oldest') => void
 }
 
-export default function MemoryGrid({ memories, loading, onRefresh }: MemoryGridProps) {
+export default function MemoryGrid({ memories, loading, onRefresh, onSortChange }: MemoryGridProps) {
+    const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
+
+    const handleSort = () => {
+        const newSortOrder = sortOrder === 'newest' ? 'oldest' : 'newest'
+        setSortOrder(newSortOrder)
+        onSortChange?.(newSortOrder)
+    }
+
     return (
         <main className="container mx-auto px-4 py-8">
-            <div className="text-center mb-8">
-                <h2 className="text-3xl font-bold text-rose-800 mb-2">
-                    Our Beautiful Journey Together
-                </h2>
-                <p className="text-rose-600 text-lg">
-                    Every moment with you is a treasure ♡
-                </p>
+            <div className="flex items-center justify-between mb-8">
+                <div className="text-center flex-1">
+                    <h2 className="text-3xl font-bold text-rose-800 mb-2">
+                        Our Beautiful Journey Together
+                    </h2>
+                    <p className="text-rose-600 text-lg">
+                        Every moment with you is a treasure ♡
+                    </p>
+                </div>
+                <Button
+                    variant="outline"
+                    onClick={handleSort}
+                    className="ml-4 text-rose-600 border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+                >
+                    {sortOrder === 'newest' ? <div className="flex items-center gap-2">
+                        Newest First
+                        <SortDesc />
+                    </div> : <div className="flex items-center gap-2">
+                        Oldest First
+                        <SortAsc />
+                    </div>
+                    }
+                </Button>
             </div>
 
             {/* Memory Grid */}

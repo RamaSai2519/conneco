@@ -68,7 +68,7 @@ export default function AddMemoryForm({ onMemoryAdded }: AddMemoryFormProps) {
                 ...(formData.date && { date: formData.date })
             }
 
-            await Raxios.post('/posts/create', submitData)
+            await Raxios.post('/create', submitData)
 
             toast({
                 title: "Success",
@@ -185,7 +185,7 @@ export default function AddMemoryForm({ onMemoryAdded }: AddMemoryFormProps) {
                                 </Label>
                                 <Input
                                     id="image_url"
-                                    type="url"
+                                    // type="url"
                                     placeholder="https://example.com/image.jpg"
                                     value={formData.image_url}
                                     onChange={(e) => handleInputChange('image_url', e.target.value)}

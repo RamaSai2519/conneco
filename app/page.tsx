@@ -10,11 +10,21 @@ import DecorativeHearts from "@/components/DecorativeHearts"
 export default function HomePage() {
   const [memories, setMemories] = useState<Post[]>([])
   const [loading, setLoading] = useState(false)
+  const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (sort?: 'newest' | 'oldest') => {
     setLoading(true)
     try {
-      const response = await Raxios.get('/posts')
+      const sortField = 'date'
+      const order = (sort || sortOrder) === 'newest' ? 'desc' : 'asc'
+
+      const response = await Raxios.get('/posts', {
+        params: {
+          sort: sortField,
+          order: order
+        }
+      })
+
       if (response.status === 200 && response.data.success) {
         setMemories(response.data.data.posts || [])
       } else {
@@ -27,6 +37,11 @@ export default function HomePage() {
     }
   }
 
+  const handleSortChange = (newSortOrder: 'newest' | 'oldest') => {
+    setSortOrder(newSortOrder)
+    fetchPosts(newSortOrder)
+  }
+
   useEffect(() => {
     fetchPosts()
   }, [])
@@ -34,7 +49,12 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-rose-50 to-orange-50">
       <Header />
-      <MemoryGrid memories={memories} loading={loading} onRefresh={fetchPosts} />
+      <MemoryGrid
+        memories={memories}
+        loading={loading}
+        onRefresh={() => fetchPosts()}
+        onSortChange={handleSortChange}
+      />
       <DecorativeHearts />
     </div>
   )

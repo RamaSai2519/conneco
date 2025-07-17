@@ -139,27 +139,24 @@ export default function MemoryGrid({ }) {
                 ) : (
                     <>
                         {memories.map((post, index) => (
-                            <MemoryCard key={post.id} post={post} index={index} />
+                            <MemoryCard key={post._id} post={post} index={index} />
                         ))}
                     </>
                 )}
             </div>
 
-            {/* Loading more indicator */}
             {loadingMore && (
                 <div className="text-center py-8">
                     <p className="text-rose-600 text-lg">Loading more memories...</p>
                 </div>
             )}
 
-            {/* No more data indicator */}
             {!loading && !hasMoreData && memories.length > 0 && (
                 <div className="text-center py-8">
                     <p className="text-rose-400 text-sm">You've reached the end of your beautiful journey ♡</p>
                 </div>
             )}
 
-            {/* Intersection observer target */}
             <div ref={observerTarget} className="h-4" />
         </main>
     )

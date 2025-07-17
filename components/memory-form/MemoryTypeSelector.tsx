@@ -18,12 +18,12 @@ export default function MemoryTypeSelector({ value, onChange }: MemoryTypeSelect
                 className="flex flex-row space-x-6"
             >
                 <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="text" id="text" />
-                    <Label htmlFor="text">Text</Label>
-                </div>
-                <div className="flex items-center space-x-2">
                     <RadioGroupItem value="image" id="image" />
                     <Label htmlFor="image">Image</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="text" id="text" />
+                    <Label htmlFor="text">Text</Label>
                 </div>
             </RadioGroup>
         </div>

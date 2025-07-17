@@ -14,7 +14,7 @@ export default function DateInput({ value, onChange }: DateInputProps) {
             <Label htmlFor="date" className="text-rose-700 font-medium">Date</Label>
             <Input
                 id="date"
-                type="datetime-local"
+                type="date"
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 className="border-rose-200 focus:border-rose-400"

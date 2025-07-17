@@ -31,7 +31,6 @@ export default function LoginPage() {
       const response = await axios.post(`${BASE_URL}/login`, { password })
       console.log("🚀 ~ handleSubmit ~ response:", response)
       if (response.status === 200) {
-        debugger;
         const { user, tokens } = response.data.data
         localStorage.setItem('user', JSON.stringify(user))
         localStorage.setItem('access_token', tokens.access)

@@ -34,7 +34,6 @@ const refreshFaxiosAccessToken = async () => {
             headers: { Authorization: `Bearer ${refreshToken}` }
         });
         if (response.status !== 200) logout_user();
-        debugger;
         const newAccessToken = response.data.data.access_token;
         localStorage.setItem('access_token', newAccessToken);
         return newAccessToken;

@@ -21,7 +21,7 @@ export default function MemoryFormDialog({ isOpen, onClose, onMemoryAdded }: Mem
     const [isLoading, setIsLoading] = useState(false)
     const [uploadLoading, setUploadLoading] = useState(false)
     const [formData, setFormData] = useState<NewMemoryData>({
-        type: 'text',
+        type: 'image',
         content: '',
         caption: '',
         image_url: '',
@@ -33,7 +33,6 @@ export default function MemoryFormDialog({ isOpen, onClose, onMemoryAdded }: Mem
         setIsLoading(true)
 
         try {
-            // Validate required fields based on type
             if (formData.type === 'text' && !formData.content) {
                 toast({
                     title: "Error",
@@ -52,7 +51,6 @@ export default function MemoryFormDialog({ isOpen, onClose, onMemoryAdded }: Mem
                 return
             }
 
-            // Prepare data for submission
             const submitData: NewMemoryData = {
                 type: formData.type,
                 ...(formData.content && { content: formData.content }),
@@ -69,7 +67,6 @@ export default function MemoryFormDialog({ isOpen, onClose, onMemoryAdded }: Mem
                 variant: "default"
             })
 
-            // Reset form and close dialog
             resetForm()
             onClose()
             onMemoryAdded()
@@ -97,12 +94,8 @@ export default function MemoryFormDialog({ isOpen, onClose, onMemoryAdded }: Mem
 
     const handleInputChange = (field: keyof NewMemoryData, value: string) => {
         setFormData(prev => {
-            const newData = {
-                ...prev,
-                [field]: value
-            }
+            const newData = { ...prev, [field]: value }
 
-            // Clear inappropriate fields when switching types
             if (field === 'type') {
                 if (value === 'text') {
                     newData.image_url = ''
@@ -132,8 +125,8 @@ export default function MemoryFormDialog({ isOpen, onClose, onMemoryAdded }: Mem
                     <DialogTitle className="text-rose-800">Add a New Memory</DialogTitle>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-6">
-                    <MemoryTypeSelector 
-                        value={formData.type} 
+                    <MemoryTypeSelector
+                        value={formData.type}
                         onChange={handleTypeChange}
                     />
 

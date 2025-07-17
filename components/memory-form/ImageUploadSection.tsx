@@ -1,12 +1,12 @@
 "use client"
 
+import { Upload as AntdUpload, message } from "antd"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
-import { Upload } from "lucide-react"
-import { Upload as AntdUpload, message } from "antd"
 import type { UploadProps } from "antd"
 import Raxios from "@/lib/axiosHelper"
+import { Upload } from "lucide-react"
 import axios from "axios"
 
 interface ImageUploadSectionProps {
@@ -29,31 +29,24 @@ export default function ImageUploadSection({
     const customUploadRequest: UploadProps['customRequest'] = async ({ file, onSuccess, onError }) => {
         try {
             onUploadLoadingChange(true)
-            
-            // Get presigned URL from backend
+
             const uploadResponse = await Raxios.post('/upload', {
                 filename: (file as File).name,
                 filetype: (file as File).type
             })
-            
+
             const presignedUrl = uploadResponse.data.data.url
-            
-            // Upload file to presigned URL
             await axios.put(presignedUrl, file, {
                 headers: {
                     'Content-Type': (file as File).type
                 }
             })
-            
-            // Extract the file URL (remove query parameters)
+
             const fileUrl = presignedUrl.split('?')[0]
-            
-            debugger;
             onImageUrlChange(fileUrl)
-            
             message.success('File uploaded successfully!')
             onSuccess?.(fileUrl)
-            
+
         } catch (error) {
             console.error('Upload error:', error)
             message.error('Failed to upload file. Please try again.')
@@ -65,7 +58,7 @@ export default function ImageUploadSection({
 
     return (
         <>
-            <div className="space-y-2">
+            <div className="flex flex-col gap-4">
                 <Label className="text-rose-700 font-medium">
                     Upload Image <span className="text-red-500">*</span>
                 </Label>
@@ -82,8 +75,8 @@ export default function ImageUploadSection({
                     }}
                     className="w-full"
                 >
-                    <Button 
-                        type="button" 
+                    <Button
+                        type="button"
                         variant="outline"
                         className="w-full border-rose-200 text-rose-700 hover:bg-rose-50 border-dashed h-32"
                         disabled={uploadLoading}
@@ -92,9 +85,6 @@ export default function ImageUploadSection({
                             <Upload className="w-8 h-8" />
                             <span>
                                 {uploadLoading ? 'Uploading...' : 'Click or drag image to upload'}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                                Support JPG, PNG, GIF up to 10MB
                             </span>
                         </div>
                     </Button>

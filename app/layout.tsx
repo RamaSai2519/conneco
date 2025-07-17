@@ -1,8 +1,8 @@
 import type React from "react"
 import type { Metadata } from "next"
 import { Kalam } from "next/font/google"
-import "./globals.css"
 import { Toaster } from "@/components/ui/toaster"
+import "./globals.css"
 
 const kalam = Kalam({
   subsets: ["latin"],
@@ -10,9 +10,8 @@ const kalam = Kalam({
 })
 
 export const metadata: Metadata = {
-  title: "Our Little Space - Memory Book",
-  description: "A cute handwritten-themed website for sharing photos and notes",
-  generator: 'v0.dev'
+  title: "Conneco - Memory Book",
+  description: "A cute handwritten-themed website for sharing photos and notes"
 }
 
 export default function RootLayout({

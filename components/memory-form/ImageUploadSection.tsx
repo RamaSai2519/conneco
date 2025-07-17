@@ -32,7 +32,7 @@ export default function ImageUploadSection({
 
             const uploadResponse = await Raxios.post('/upload', {
                 filename: (file as File).name,
-                filetype: (file as File).type
+                filetype: (file as File).type || 'image/heic'
             })
 
             const presignedUrl = uploadResponse.data.data.url

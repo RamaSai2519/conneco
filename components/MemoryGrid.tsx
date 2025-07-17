@@ -1,25 +1,102 @@
 import { Post } from "@/types"
-import { useState } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
+import Raxios from "@/lib/axiosHelper"
 import MemoryCard from "./MemoryCard"
 import AddMemoryForm from "./AddMemoryForm"
 import { Button } from "@/components/ui/button"
 import { SortAsc, SortDesc } from "lucide-react"
 
-interface MemoryGridProps {
-    memories: Post[]
-    loading: boolean
-    onRefresh?: () => void
-    onSortChange?: (sortOrder: 'newest' | 'oldest') => void
-}
 
-export default function MemoryGrid({ memories, loading, onRefresh, onSortChange }: MemoryGridProps) {
+export default function MemoryGrid({ }) {
+    const [memories, setMemories] = useState<Post[]>([])
+    const [loading, setLoading] = useState(false)
+    const [loadingMore, setLoadingMore] = useState(false)
+    const [page, setPage] = useState(1)
+    const [hasMoreData, setHasMoreData] = useState(true)
+    const [size, setSize] = useState(10)
     const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
+    const observerTarget = useRef<HTMLDivElement>(null)
+
+    const fetchPosts = async (sort?: 'newest' | 'oldest', pageNum = 1, isNewSort = false) => {
+        if (pageNum === 1) {
+            setLoading(true)
+        } else {
+            setLoadingMore(true)
+        }
+
+        try {
+            const sortField = 'date'
+            const order = (sort || sortOrder) === 'newest' ? 'desc' : 'asc'
+
+            const response = await Raxios.get('/posts', {
+                params: { sort: sortField, order: order, page: pageNum, size }
+            })
+
+            if (response.status === 200 && response.data.success) {
+                const newPosts = response.data.data.posts || []
+                const totalPosts = response.data.data.total || 0
+
+                if (pageNum === 1 || isNewSort) {
+                    setMemories(newPosts)
+                } else {
+                    setMemories(prev => [...prev, ...newPosts])
+                }
+
+                const currentTotal = pageNum === 1 || isNewSort ? newPosts.length : memories.length + newPosts.length
+                setHasMoreData(currentTotal < totalPosts && newPosts.length === size)
+            } else {
+                console.error('Failed to fetch posts:', response.data.error || response.statusText)
+            }
+        } catch (error) {
+            console.error('Error fetching posts:', error)
+        } finally {
+            setLoading(false)
+            setLoadingMore(false)
+        }
+    }
 
     const handleSort = () => {
         const newSortOrder = sortOrder === 'newest' ? 'oldest' : 'newest'
         setSortOrder(newSortOrder)
-        onSortChange?.(newSortOrder)
+        setPage(1)
+        setHasMoreData(true)
+        fetchPosts(newSortOrder, 1, true)
     }
+
+    const loadMorePosts = useCallback(() => {
+        if (!loadingMore && hasMoreData) {
+            const nextPage = page + 1
+            setPage(nextPage)
+            fetchPosts(sortOrder, nextPage)
+        }
+    }, [loadingMore, hasMoreData, page, sortOrder])
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                const [entry] = entries
+                if (entry.isIntersecting && hasMoreData && !loading && !loadingMore) {
+                    loadMorePosts()
+                }
+            },
+            { threshold: 0.1 }
+        )
+
+        const currentTarget = observerTarget.current
+        if (currentTarget) {
+            observer.observe(currentTarget)
+        }
+
+        return () => {
+            if (currentTarget) {
+                observer.unobserve(currentTarget)
+            }
+        }
+    }, [loadMorePosts, hasMoreData, loading, loadingMore])
+
+    useEffect(() => {
+        fetchPosts()
+    }, [])
 
     return (
         <main className="container mx-auto px-4 py-8">
@@ -50,7 +127,11 @@ export default function MemoryGrid({ memories, loading, onRefresh, onSortChange 
 
             {/* Memory Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-                <AddMemoryForm onMemoryAdded={onRefresh || (() => { })} />
+                <AddMemoryForm onMemoryAdded={() => {
+                    setPage(1)
+                    setHasMoreData(true)
+                    fetchPosts(sortOrder, 1, true)
+                }} />
                 {loading ? (
                     <div className="col-span-full text-center py-8">
                         <p className="text-rose-600 text-lg">Loading memories...</p>
@@ -63,6 +144,23 @@ export default function MemoryGrid({ memories, loading, onRefresh, onSortChange 
                     </>
                 )}
             </div>
+
+            {/* Loading more indicator */}
+            {loadingMore && (
+                <div className="text-center py-8">
+                    <p className="text-rose-600 text-lg">Loading more memories...</p>
+                </div>
+            )}
+
+            {/* No more data indicator */}
+            {!loading && !hasMoreData && memories.length > 0 && (
+                <div className="text-center py-8">
+                    <p className="text-rose-400 text-sm">You've reached the end of your beautiful journey ♡</p>
+                </div>
+            )}
+
+            {/* Intersection observer target */}
+            <div ref={observerTarget} className="h-4" />
         </main>
     )
 }

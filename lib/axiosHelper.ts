@@ -34,7 +34,8 @@ const refreshFaxiosAccessToken = async () => {
             headers: { Authorization: `Bearer ${refreshToken}` }
         });
         if (response.status !== 200) logout_user();
-        const newAccessToken = response.data.access_token;
+        debugger;
+        const newAccessToken = response.data.data.access_token;
         localStorage.setItem('access_token', newAccessToken);
         return newAccessToken;
     } catch (error) {
@@ -48,7 +49,8 @@ Raxios.interceptors.response.use(
     },
     async (error) => {
         const originalRequest = error.config;
-        if ((error.response.status === 500 || 401) && !originalRequest._retry) {
+
+        if (!originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const newAccessToken = await refreshFaxiosAccessToken();

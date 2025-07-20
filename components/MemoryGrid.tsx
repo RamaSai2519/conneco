@@ -126,7 +126,7 @@ export default function MemoryGrid({ }) {
             </div>
 
             {/* Memory Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-8xl mx-auto">
                 <AddMemoryForm onMemoryAdded={() => {
                     setPage(1)
                     setHasMoreData(true)

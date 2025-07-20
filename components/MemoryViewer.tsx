@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
-import { X, Heart, MessageCircle, Share, User, Calendar, ChevronDown, ChevronUp } from "lucide-react"
 import { Post } from "@/types"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { X, Calendar, ChevronDown, ChevronUp } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
 
 interface MemoryViewerProps {
@@ -17,6 +17,13 @@ interface MemoryViewerProps {
 
 export default function MemoryViewer({ post, isOpen, onClose }: MemoryViewerProps) {
     const [isDetailsOpen, setIsDetailsOpen] = useState(false)
+
+    useEffect(() => {
+        const handleKeyPress = (event: KeyboardEvent) => { if (event.key === 'Escape' && isOpen) onClose(); }
+
+        if (isOpen) document.addEventListener('keydown', handleKeyPress);
+        return () => document.removeEventListener('keydown', handleKeyPress);
+    }, [isOpen, onClose])
 
     if (!isOpen) return null
 

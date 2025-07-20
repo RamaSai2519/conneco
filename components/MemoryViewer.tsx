@@ -93,14 +93,6 @@ export default function MemoryViewer({ post, isOpen, onClose }: MemoryViewerProp
                                     </p>
                                 </div>
                             )}
-
-                            {post.type === 'text' && post.content && (
-                                <div className="mb-4">
-                                    <p className="text-gray-900 leading-relaxed">
-                                        <span className="font-semibold">{post.user_name}</span> {post.content}
-                                    </p>
-                                </div>
-                            )}
                         </div>
                     </div>
 

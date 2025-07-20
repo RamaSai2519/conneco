@@ -153,7 +153,7 @@ export default function MemoryGrid({ }) {
 
             {!loading && !hasMoreData && memories.length > 0 && (
                 <div className="text-center py-8">
-                    <p className="text-rose-400 text-sm">You've reached the end of your beautiful journey ♡</p>
+                    <p className="text-rose-400 text-sm">I hope we keep adding more memories together ♡</p>
                 </div>
             )}
 

@@ -13,7 +13,7 @@ export default function MemoryGrid({ }) {
     const [loadingMore, setLoadingMore] = useState(false)
     const [page, setPage] = useState(1)
     const [hasMoreData, setHasMoreData] = useState(true)
-    const [size, setSize] = useState(5)
+    const [size, setSize] = useState(7)
     const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
     const observerTarget = useRef<HTMLDivElement>(null)
 

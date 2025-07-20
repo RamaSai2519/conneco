@@ -8,14 +8,14 @@ import { SortAsc, SortDesc } from "lucide-react"
 
 
 export default function MemoryGrid({ }) {
-    const [memories, setMemories] = useState<Post[]>([])
-    const [loading, setLoading] = useState(false)
-    const [loadingMore, setLoadingMore] = useState(false)
+    const size = 7
     const [page, setPage] = useState(1)
-    const [hasMoreData, setHasMoreData] = useState(true)
-    const [size, setSize] = useState(7)
-    const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
+    const [loading, setLoading] = useState(false)
     const observerTarget = useRef<HTMLDivElement>(null)
+    const [memories, setMemories] = useState<Post[]>([])
+    const [hasMoreData, setHasMoreData] = useState(true)
+    const [loadingMore, setLoadingMore] = useState(false)
+    const [sortOrder, setSortOrder] = useState<'newest' | 'oldest'>('newest')
 
     const fetchPosts = async (sort?: 'newest' | 'oldest', pageNum = 1, isNewSort = false) => {
         if (pageNum === 1) {
@@ -112,7 +112,7 @@ export default function MemoryGrid({ }) {
                 <Button
                     variant="outline"
                     onClick={handleSort}
-                    className="ml-4 text-rose-600 border-rose-300 hover:bg-rose-50 hover:text-rose-600"
+                    className="ml-4 text-rose-600 border-rose-300 hover:bg-rose-50 hover:text-rose-600 hidden"
                 >
                     {sortOrder === 'newest' ? <div className="flex items-center gap-2">
                         Newest First
@@ -126,7 +126,7 @@ export default function MemoryGrid({ }) {
             </div>
 
             {/* Memory Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-8xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
                 <AddMemoryForm onMemoryAdded={() => {
                     setPage(1)
                     setHasMoreData(true)
